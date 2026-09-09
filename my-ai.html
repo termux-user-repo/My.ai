@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>my.ai — an intelligence that knows you</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --void: #05060a;
+    --void-2: #0a0c14;
+    --mist: #c9cdd9;
+    --bright: #f2f3f7;
+    --glow-a: #7fd8ff;
+    --glow-b: #b98cff;
+    --line: rgba(255,255,255,0.09);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--mist);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--glow-a);
+    outline-offset: 4px;
+  }
+
+  .serif {
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+  }
+
+  /* ---------- NAV ---------- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px clamp(24px, 5vw, 72px);
+    z-index: 100;
+    mix-blend-mode: difference;
+  }
+
+  .wordmark {
+    font-family: 'Fraunces', serif;
+    font-weight: 450;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    color: var(--bright);
+  }
+
+  .wordmark span { font-style: italic; color: var(--glow-a); }
+
+  nav .cta {
+    font-size: 14px;
+    color: var(--bright);
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 9px 20px;
+    border-radius: 100px;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  nav .cta:hover { background: var(--bright); color: var(--void); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    height: 100vh;
+    min-height: 720px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 24px;
+  }
+
+  .orb-field {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .orb {
+    width: min(52vw, 560px);
+    height: min(52vw, 560px);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 38% 32%, rgba(255,255,255,0.9), rgba(127,216,255,0.4) 22%, rgba(185,140,255,0.35) 45%, rgba(5,6,10,0) 72%);
+    filter: blur(2px);
+    animation: breathe 7s ease-in-out infinite;
+    transition: transform 0.4s ease-out;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.06); opacity: 1; }
+  }
+
+  .grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+  .eyebrow {
+    font-size: 15px;
+    color: rgba(201,205,217,0.65);
+    margin-bottom: 28px;
+    letter-spacing: 0.01em;
+  }
+
+  h1.hero-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2.6rem, 7vw, 5.4rem);
+    line-height: 1.04;
+    color: var(--bright);
+    letter-spacing: -0.02em;
+  }
+
+  h1.hero-title em {
+    font-style: italic;
+    font-weight: 450;
+    background: linear-gradient(100deg, var(--glow-a), var(--glow-b));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-sub {
+    margin: 32px auto 0;
+    max-width: 540px;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--mist);
+  }
+
+  .hero-actions {
+    margin-top: 48px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary, .btn-ghost {
+    display: inline-block;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .btn-primary {
+    background: var(--bright);
+    color: var(--void);
+    border: none;
+    padding: 15px 32px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(127,216,255,0.25); color: var(--void); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--bright);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 15px 32px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.25s ease;
+  }
+
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.6); color: var(--bright); }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: rgba(201,205,217,0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+  }
+
+  .scroll-cue .line {
+    width: 1px;
+    height: 34px;
+    background: linear-gradient(rgba(201,205,217,0.6), transparent);
+    animation: dropline 2.2s ease-in-out infinite;
+  }
+
+  @keyframes dropline {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    50.1% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section {
+    position: relative;
+    padding: 160px clamp(24px, 6vw, 72px);
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 14px;
+    color: rgba(127,216,255,0.8);
+    margin-bottom: 20px;
+  }
+
+  .section-head {
+    font-family: 'Fraunces', serif;
+    font-weight: 350;
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    color: var(--bright);
+    line-height: 1.15;
+    max-width: 720px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-head + p {
+    margin-top: 24px;
+    max-width: 540px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--mist);
+  }
+
+  /* moments row */
+  .moments {
+    margin-top: 96px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .moment {
+    background: var(--void);
+    padding: 48px 36px;
+  }
+
+  .moment .glyph {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 32px;
+  }
+
+  .moment h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 450;
+    font-size: 22px;
+    color: var(--bright);
+    margin-bottom: 14px;
+  }
+
+  .moment p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(201,205,217,0.85);
+  }
+
+  /* dialogue section */
+  .dialogue {
+    background: var(--void-2);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dialogue-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .exchange { margin-bottom: 40px; }
+
+  .exchange .who {
+    font-size: 13px;
+    color: rgba(201,205,217,0.5);
+    margin-bottom: 10px;
+  }
+
+  .exchange .said {
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--bright);
+  }
+
+  .exchange.from-ai .said {
+    font-family: 'Fraunces', serif;
+    font-weight: 350;
+    font-style: italic;
+    color: var(--glow-a);
+  }
+
+  /* memory band */
+  .band {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    flex-wrap: wrap;
+  }
+
+  .band-visual {
+    flex: 1 1 360px;
+    min-width: 300px;
+    aspect-ratio: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(127,216,255,0.25);
+    animation: spin linear infinite;
+  }
+  .ring:nth-child(1) { width: 100%; height: 100%; animation-duration: 40s; }
+  .ring:nth-child(2) { width: 72%; height: 72%; border-color: rgba(185,140,255,0.2); animation-duration: 28s; animation-direction: reverse; }
+  .ring:nth-child(3) { width: 46%; height: 46%; border-color: rgba(255,255,255,0.15); animation-duration: 55s; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .band-text { flex: 1 1 360px; min-width: 280px; }
+
+  /* closing */
+  .finale {
+    text-align: center;
+    padding-top: 200px;
+    padding-bottom: 200px;
+  }
+
+  .finale h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2.2rem, 5.5vw, 4rem);
+    color: var(--bright);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 780px;
+    margin: 0 auto 44px;
+  }
+
+  .finale h2 em {
+    font-style: italic;
+    font-weight: 450;
+    background: linear-gradient(100deg, var(--glow-a), var(--glow-b));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 40px clamp(24px, 6vw, 72px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(201,205,217,0.45);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  @media (max-width: 860px) {
+    .moments { grid-template-columns: 1fr; }
+    .band { flex-direction: column; }
+    section { padding: 110px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<nav>
+  <div class="wordmark">my<span>.ai</span></div>
+  <a href="https://github.com/termux-user-repo/My.ai" class="cta" target="_blank" rel="noopener">GitHub</a>
+</nav>
+
+<header class="hero">
+  <div class="orb-field"><div class="orb" id="orb"></div></div>
+  <div class="hero-content">
+    <div class="eyebrow">An intelligence built around one person — you</div>
+    <h1 class="hero-title">Something that <em>listens</em>,<br>and actually remembers.</h1>
+    <p class="hero-sub">my.ai learns the shape of your days, the way you think, the things you're carrying — and meets you there, every time, without you starting over.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/termux-user-repo/My.ai" class="btn-primary" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><span class="line"></span></div>
+</header>
+
+<section id="begin">
+  <p class="section-label">What it's like</p>
+  <h2 class="section-head">Not a tool you operate. A presence you return to.</h2>
+  <p>Most software waits for instructions. my.ai carries context forward — your goals, your half-finished thoughts, the version of you that showed up yesterday — so every conversation starts further along.</p>
+
+  <div class="moments">
+    <div class="moment">
+      <svg class="glyph" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="15.5" stroke="#7fd8ff" stroke-width="1"/><circle cx="17" cy="17" r="4" fill="#7fd8ff"/></svg>
+      <h3>It remembers</h3>
+      <p>The project you're mid-way through, the name you mentioned once, the plan you're still deciding on. Nothing repeated twice.</p>
+    </div>
+    <div class="moment">
+      <svg class="glyph" viewBox="0 0 34 34" fill="none"><path d="M6 17h22M17 6v22" stroke="#b98cff" stroke-width="1"/><circle cx="17" cy="17" r="15.5" stroke="#b98cff" stroke-width="1"/></svg>
+      <h3>It adapts</h3>
+      <p>Your pace, your tone, how much detail you actually want. my.ai calibrates to you specifically, not to an average user.</p>
+    </div>
+    <div class="moment">
+      <svg class="glyph" viewBox="0 0 34 34" fill="none"><path d="M17 3v6M17 25v6M3 17h6M25 17h6" stroke="#f2f3f7" stroke-width="1"/><circle cx="17" cy="17" r="9" stroke="#f2f3f7" stroke-width="1"/></svg>
+      <h3>It's honest</h3>
+      <p>Real answers, real pushback when you need it — not agreement dressed up as help.</p>
+    </div>
+  </div>
+</section>
+
+<section class="dialogue">
+  <div class="dialogue-inner">
+    <p class="section-label">A conversation, months apart</p>
+    <div class="exchange">
+      <div class="who">You — March</div>
+      <div class="said">I'm thinking about leaving my job to freelance, but I haven't told anyone.</div>
+    </div>
+    <div class="exchange from-ai">
+      <div class="who">my.ai</div>
+      <div class="said">That's a big one to carry alone. What would need to be true for it to feel safe to try?</div>
+    </div>
+    <div class="exchange">
+      <div class="who">You — September</div>
+      <div class="said">Six months in. Remember that freelance thing? It's actually working.</div>
+    </div>
+    <div class="exchange from-ai">
+      <div class="who">my.ai</div>
+      <div class="said">I remember. You were worried about the first three months of income — how did that part go?</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="band">
+    <div class="band-visual">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+    <div class="band-text">
+      <p class="section-label">Underneath it</p>
+      <h2 class="section-head">Continuity, not just conversation.</h2>
+      <p>Every exchange adds one more layer of context — quietly, without ceremony. Over weeks, my.ai stops feeling like an app and starts feeling like a second memory.</p>
+    </div>
+  </div>
+</section>
+
+<section class="finale">
+  <h2>Stop <em>re-explaining</em><br>your own life.</h2>
+  <div class="hero-actions">
+    <a href="https://github.com/termux-user-repo/My.ai" class="btn-primary" target="_blank" rel="noopener">View on GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <span>my.ai</span>
+  <span>Built to know you — not just answer you.</span>
+</footer>
+
+<script>
+  const orb = document.getElementById('orb');
+  window.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 24;
+    const y = (e.clientY / window.innerHeight - 0.5) * 24;
+    orb.style.transform = `translate(${x}px, ${y}px)`;
+  });
+</script>
+
+</body>
+</html>
